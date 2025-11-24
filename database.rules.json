@@ -1,0 +1,31 @@
+{
+  "rules": {
+    // Users can only read their own data.
+    // All write operations are blocked from the client.
+    // Your server (using Admin SDK) will bypass these rules.
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": false
+      }
+    },
+    // Withdrawals are sensitive, only the server can create or modify them.
+    // Users cannot even read other users' withdrawal requests.
+    "withdrawals": {
+        "$uid": {
+            ".read": "auth != null && auth.uid == $uid",
+            ".write": false
+        },
+        ".write": false,
+        ".read": false
+    },
+    // Global data like notifications or app settings.
+    // Readable by all authenticated users, but only writable by the server.
+    "public_data": {
+        "notifications": {
+            ".read": "auth != null",
+            ".write": false
+        }
+    }
+  }
+}
